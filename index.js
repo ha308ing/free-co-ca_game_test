@@ -3,16 +3,7 @@ const ctx = canvas.getContext("2d");
 const CANVAS_WIDTH = (canvas.width = 800);
 const CANVAS_HEIGHT = (canvas.height = 500);
 let gameSpeed = 5;
-
-const showGameSpeed = document.getElementById("showGameSpeed");
-showGameSpeed.textContent = gameSpeed;
-
-const gameSpeedSlider = document.getElementById("gameSpeedSlider");
-gameSpeedSlider.value = gameSpeed;
-gameSpeedSlider.addEventListener("input", e => {
-  gameSpeed = e.target.value;
-  showGameSpeed.textContent = gameSpeed;
-});
+// let gameFrame = 0;
 
 const backgroundLayer1 = new Image();
 backgroundLayer1.src = "./layer-1.png";
@@ -29,53 +20,68 @@ backgroundLayer4.src = "./layer-4.png";
 const backgroundLayer5 = new Image();
 backgroundLayer5.src = "./layer-5.png";
 
-class Layer {
-  constructor(image, speedModifier) {
-    this.x = 0;
-    this.y = 0;
-    this.width = 1667;
-    this.height = 500;
-    this.image = image;
-    this.speedModifier = speedModifier;
-    this.speed = gameSpeed * this.speedModifier;
-  }
+// images are large and take time to download, so run after load
+document.addEventListener("DOMContentLoaded", () => {
+  const showGameSpeed = document.getElementById("showGameSpeed");
+  showGameSpeed.textContent = gameSpeed;
 
-  update() {
-    this.speed = gameSpeed * this.speedModifier;
-    if (this.x <= -this.width) {
-      this.x = 0;
-    }
-    this.x = Math.floor(this.x - this.speed);
-  }
-
-  draw() {
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-    ctx.drawImage(
-      this.image,
-      this.x + this.width,
-      this.y,
-      this.width,
-      this.height
-    );
-  }
-}
-
-const layer1 = new Layer(backgroundLayer1, 0, 2);
-const layer2 = new Layer(backgroundLayer2, 0.4);
-const layer3 = new Layer(backgroundLayer3, 0.5);
-const layer4 = new Layer(backgroundLayer4, 0.7);
-const layer5 = new Layer(backgroundLayer5, 1);
-
-const gameObjects = [layer1, layer2, layer3, layer4, layer5];
-
-function animate() {
-  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-  // layer1.update();
-  gameObjects.forEach(object => {
-    object.update();
-    object.draw();
+  const gameSpeedSlider = document.getElementById("gameSpeedSlider");
+  gameSpeedSlider.value = gameSpeed;
+  gameSpeedSlider.addEventListener("input", e => {
+    gameSpeed = e.target.value;
+    showGameSpeed.textContent = gameSpeed;
   });
-  requestAnimationFrame(animate);
-}
 
-animate();
+  class Layer {
+    constructor(image, speedModifier) {
+      this.x = 0;
+      this.y = 0;
+      this.width = 1667;
+      this.height = 500;
+      this.image = image;
+      this.speedModifier = speedModifier;
+      this.speed = gameSpeed * this.speedModifier;
+    }
+
+    update() {
+      this.speed = gameSpeed * this.speedModifier;
+      // this.x = (-gameFrame * this.speed) % this.width;
+      if (this.x <= -this.width) {
+        this.x = 0;
+      }
+      this.x = Math.floor(this.x - this.speed);
+    }
+
+    draw() {
+      ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+      ctx.drawImage(
+        this.image,
+        this.x + this.width,
+        this.y,
+        this.width,
+        this.height
+      );
+    }
+  }
+
+  const layer1 = new Layer(backgroundLayer1, 0, 2);
+  const layer2 = new Layer(backgroundLayer2, 0.4);
+  const layer3 = new Layer(backgroundLayer3, 0.5);
+  const layer4 = new Layer(backgroundLayer4, 0.7);
+  const layer5 = new Layer(backgroundLayer5, 1);
+
+  const gameObjects = [layer1, layer2, layer3, layer4, layer5];
+
+  function animate() {
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    // layer1.update();
+    gameObjects.forEach(object => {
+      object.update();
+      object.draw();
+    });
+    // gameFrame++;
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+});
