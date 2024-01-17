@@ -7,7 +7,22 @@
     <title>Document</title>
   </head>
   <body>
-    <canvas id="canvas"></canvas>
+    <div class="controls">
+      <label for="playerState">Player state:</label>
+      <select name="playerState">
+        <option value="run" selected>run</option>
+        <option value="jump">jump</option>
+        <option value="dizzy">dizzy</option>
+        <option value="fall">fall</option>
+        <option value="roll">roll</option>
+        <option value="gotHit">got hit</option>
+        <option value="ko">ko</option>
+        <option value="bite">bite</option>
+        <option value="idle">idle</option>
+        <option value="sit">sit</option>
+      </select>
+    </div>
+    <canvas id="canvas1"></canvas>
     <script src="./index.js" type="text/javascript"></script>
   </body>
 </html>

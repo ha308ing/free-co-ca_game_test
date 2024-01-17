@@ -1,5 +1,35 @@
-#canvas {
-  border: 2px solid black;
+:root {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  line-height: 1;
+}
+
+#canvas1 {
+  /* border: 1px solid black; */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 300px;
   height: 300px;
+}
+
+.controls {
+  position: absolute;
+  z-index: 10;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.controls,
+select,
+option {
+  font-size: 18px;
 }
