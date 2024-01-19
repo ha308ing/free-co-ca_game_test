@@ -75,6 +75,7 @@ class Raven {
       } else {
         this.frame++;
         this.timeSinceFlap = 0;
+        particles.push(new Particle(this.x, this.y, this.width, this.color));
       }
     }
 
@@ -146,6 +147,34 @@ class Explosion {
   }
 }
 
+let particles = [];
+
+class Particle {
+  constructor(x, y, size, color) {
+    this.size = size;
+    this.x = x + this.size * 0.8;
+    this.y = y + this.size * 0.2;
+    this.radius = Math.random() * this.size * 0.1;
+    this.maxRadius = Math.random() * 20 + 35;
+    this.markedForDelete = false;
+    this.speedX = Math.random() * 1 + 0.5;
+    this.color = color;
+  }
+
+  update() {
+    this.x += this.speedX;
+    this.radius += 0.4;
+    if (this.radius > this.maxRadius) this.markedForDelete = true;
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.fillStyle = this.color;
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
 // timestamp to refer to ms not computer speed
 // draw next frame after timestamp, not just when finish calcs
 function animate(timestamp) {
@@ -164,13 +193,14 @@ function animate(timestamp) {
     ravens.sort((a, b) => a.height - b.height);
   }
   drawScore();
-  [...ravens, ...explosions].forEach(raven => {
+  [...particles, ...ravens, ...explosions].forEach(raven => {
     raven.update(deltaTime);
     raven.draw();
   });
 
   ravens = ravens.filter(r => !r.markedForDelete);
   explosions = explosions.filter(e => !e.markedForDelete);
+  particles = particles.filter(p => !p.markedForDelete);
   // console.log(ravens);
 
   if (!gameOver) {
