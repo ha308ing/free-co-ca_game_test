@@ -1,9 +1,15 @@
 /** @type {HTMLCanvasElement} */
 const canvas = document.getElementById("canvas1");
+/** @type {HTMLCanvasElement} */
+const collistionCanvas = document.getElementById("collistionCanvas");
 let CANVAS_WIDTH = (canvas.width = window.innerWidth);
 let CANVAS_HEIGHT = (canvas.height = window.innerHeight);
 
+collistionCanvas.width = CANVAS_WIDTH;
+collistionCanvas.height = CANVAS_HEIGHT;
+
 const ctx = canvas.getContext("2d");
+const ctxCollision = collistionCanvas.getContext("2d");
 
 let score = 0;
 ctx.font = "50px Impact";
@@ -41,6 +47,12 @@ class Raven {
     this.markedForDelete = false;
     this.timeSinceFlap = 0;
     this.flapInterval = Math.random() * 100 + 100;
+    this.randomColors = [
+      Math.floor(Math.random() * 255),
+      Math.floor(Math.random() * 255),
+      Math.floor(Math.random() * 255),
+    ];
+    this.color = `rgb(${this.randomColors[0]}, ${this.randomColors[1]}, ${this.randomColors[2]})`;
   }
 
   update(deltaTime) {
@@ -68,6 +80,8 @@ class Raven {
 
   draw() {
     // if (this.frame % 6 === 0) {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
     ctx.drawImage(
       this.image,
       this.spriteWidth * this.frame,
@@ -80,7 +94,6 @@ class Raven {
       this.height
     );
     // }
-    // ctx.fillRect(this.x, this.y, this.width, this.height);
   }
 }
 
@@ -122,4 +135,9 @@ function drawScore() {
   ctx.fillText("Score: " + score, textCoord.x, textCoord.y);
 }
 
-window.addEventListener("click", event => {});
+window.addEventListener("click", e => {
+  // get data of clicked pixel {data: [red, green, blue, opacity(0..255)], height, width}
+  const detectPixelColor = ctx.getImageData(e.x, e.y, 1, 1);
+  ctxCollision.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  ctxCollision.fillRect(e.x - 10, e.y - 10, 20, 20);
+});

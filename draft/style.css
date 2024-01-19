@@ -7,8 +7,14 @@
   box-sizing: inherit;
   line-height: 1;
 }
-#canvas1 {
+body {
+  margin: 0;
+}
+#canvas1,
+collistionCanvas {
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(to top, #d299c2 0%, #fef9d7 100%);
+}
+#canvas1 {
+  /* background-image: linear-gradient(to top, #d299c2 0%, #fef9d7 100%); */
 }
