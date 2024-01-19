@@ -23,9 +23,14 @@ class Explosion {
     this.timer = 0;
     // random angle from 0 to 360 deg (2PI)
     this.angle = Math.random() * 6.28;
+    this.sound = new Audio();
+    this.sound.src = "./boom.wav";
   }
 
   update() {
+    if (this.timer === 0) {
+      this.sound.play();
+    }
     this.timer++;
     if (this.timer % 7 === 0) {
       this.frame++;
@@ -92,3 +97,7 @@ function animate() {
 }
 
 animate();
+
+window.addEventListener("resize", () => {
+  canvasPosition = canvas.getBoundingClientRect();
+});
