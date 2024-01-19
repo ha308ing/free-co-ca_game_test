@@ -14,6 +14,8 @@ const ctxCollision = collistionCanvas.getContext("2d");
 let score = 0;
 ctx.font = "50px Impact";
 
+let gameOver = false;
+
 // accumulate time values between frames
 let timeToNextRaven = 0;
 
@@ -75,6 +77,9 @@ class Raven {
         this.timeSinceFlap = 0;
       }
     }
+
+    // if raven crossed the screen - game over
+    if (this.x < 0 - this.width) gameOver = true;
   }
 
   draw() {
@@ -168,7 +173,11 @@ function animate(timestamp) {
   explosions = explosions.filter(e => !e.markedForDelete);
   // console.log(ravens);
 
-  requestAnimationFrame(animate);
+  if (!gameOver) {
+    requestAnimationFrame(animate);
+  } else {
+    drawGameOver();
+  }
 }
 
 animate(0);
@@ -179,6 +188,22 @@ function drawScore() {
   ctx.fillText("Score: " + score, textCoord.x - 3, textCoord.y - 3);
   ctx.fillStyle = "white";
   ctx.fillText("Score: " + score, textCoord.x, textCoord.y);
+}
+
+function drawGameOver() {
+  ctx.fillStyle = "black";
+  ctx.textAlign = "center";
+  ctx.fillText(
+    "Game Over, your score is " + score,
+    CANVAS_WIDTH * 0.5,
+    CANVAS_HEIGHT * 0.5
+  );
+  ctx.fillStyle = "white";
+  ctx.fillText(
+    "Game Over, your score is " + score,
+    CANVAS_WIDTH * 0.5 + 3,
+    CANVAS_HEIGHT * 0.5 + 3
+  );
 }
 
 window.addEventListener("click", e => {
