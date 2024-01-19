@@ -96,6 +96,51 @@ class Raven {
   }
 }
 
+let explosions = [];
+
+class Explosion {
+  constructor(x, y, size) {
+    this.image = new Image();
+    this.image.src = "./boom.png";
+    this.spriteWidth = 200;
+    this.spriteHeight = 175;
+    this.size = size;
+    this.x = x;
+    this.y = y;
+    this.frame = 0;
+    this.sound = new Audio();
+    this.sound.src = "./boom.wav";
+    this.timeSinceLastFrame = 0;
+    this.frameInterval = 100;
+    this.markForDelete = false;
+    this.maxFrame = 5;
+  }
+
+  update(deltaTime) {
+    if (this.frame === 0) this.sound.play();
+    this.timeSinceLastFrame += deltaTime;
+    if (this.timeSinceLastFrame > this.frameInterval) {
+      this.frame++;
+      this.timeSinceLastFrame = 0;
+      if (this.frame > this.maxFrame) this.markForDelete = true;
+    }
+  }
+
+  draw() {
+    ctx.drawImage(
+      this.image,
+      this.frame * this.spriteWidth,
+      0,
+      this.spriteWidth,
+      this.spriteHeight,
+      this.x,
+      this.y - this.size * 0.25,
+      this.size,
+      this.size
+    );
+  }
+}
+
 // timestamp to refer to ms not computer speed
 // draw next frame after timestamp, not just when finish calcs
 function animate(timestamp) {
@@ -114,13 +159,14 @@ function animate(timestamp) {
     ravens.sort((a, b) => a.height - b.height);
   }
   drawScore();
-  [...ravens].forEach(raven => {
+  [...ravens, ...explosions].forEach(raven => {
     raven.update(deltaTime);
     raven.draw();
   });
 
   ravens = ravens.filter(r => !r.markedForDelete);
-  console.log(ravens);
+  explosions = explosions.filter(e => !e.markedForDelete);
+  // console.log(ravens);
 
   requestAnimationFrame(animate);
 }
@@ -145,8 +191,9 @@ window.addEventListener("click", e => {
       r.randomColors[1] === pixelColor[1] &&
       r.randomColors[2] === pixelColor[2]
     ) {
-      score++;
       r.markedForDelete = true;
+      score++;
+      explosions.push(new Explosion(r.x, r.y, r.width));
     }
   });
 });
