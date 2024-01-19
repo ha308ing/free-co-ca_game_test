@@ -11,10 +11,14 @@ body {
   margin: 0;
 }
 #canvas1,
-collistionCanvas {
+#collistionCanvas {
   position: absolute;
   inset: 0;
 }
 #canvas1 {
-  /* background-image: linear-gradient(to top, #d299c2 0%, #fef9d7 100%); */
+  background-image: linear-gradient(to top, #d299c2 0%, #fef9d7 100%);
+}
+
+#collistionCanvas {
+  opacity: 0;
 }

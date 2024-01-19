@@ -25,7 +25,6 @@ let ravenInterval = 500;
 let lastTime = 0;
 
 let ravens = [];
-let gameFrame = 0;
 
 class Raven {
   constructor() {
@@ -80,8 +79,8 @@ class Raven {
 
   draw() {
     // if (this.frame % 6 === 0) {
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctxCollision.fillStyle = this.color;
+    ctxCollision.fillRect(this.x, this.y, this.width, this.height);
     ctx.drawImage(
       this.image,
       this.spriteWidth * this.frame,
@@ -97,12 +96,11 @@ class Raven {
   }
 }
 
-const raven = new Raven();
-
 // timestamp to refer to ms not computer speed
 // draw next frame after timestamp, not just when finish calcs
 function animate(timestamp) {
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  ctxCollision.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
   // time in ms between frames
   let deltaTime = timestamp - lastTime;
@@ -112,6 +110,8 @@ function animate(timestamp) {
     // add new raven every timeToNextRaven
     ravens.push(new Raven());
     timeToNextRaven = 0;
+    // larger ravens to front
+    ravens.sort((a, b) => a.height - b.height);
   }
   drawScore();
   [...ravens].forEach(raven => {
@@ -137,7 +137,16 @@ function drawScore() {
 
 window.addEventListener("click", e => {
   // get data of clicked pixel {data: [red, green, blue, opacity(0..255)], height, width}
-  const detectPixelColor = ctx.getImageData(e.x, e.y, 1, 1);
-  ctxCollision.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-  ctxCollision.fillRect(e.x - 10, e.y - 10, 20, 20);
+  const detectPixelColor = ctxCollision.getImageData(e.x, e.y, 1, 1);
+  const pixelColor = detectPixelColor.data;
+  ravens.forEach(r => {
+    if (
+      r.randomColors[0] === pixelColor[0] &&
+      r.randomColors[1] === pixelColor[1] &&
+      r.randomColors[2] === pixelColor[2]
+    ) {
+      score++;
+      r.markedForDelete = true;
+    }
+  });
 });
