@@ -54,6 +54,7 @@ class Raven {
       Math.floor(Math.random() * 255),
     ];
     this.color = `rgb(${this.randomColors[0]}, ${this.randomColors[1]}, ${this.randomColors[2]})`;
+    this.hasTrail = Math.random() > 0.5;
   }
 
   update(deltaTime) {
@@ -75,7 +76,13 @@ class Raven {
       } else {
         this.frame++;
         this.timeSinceFlap = 0;
-        particles.push(new Particle(this.x, this.y, this.width, this.color));
+        if (this.hasTrail) {
+          for (let i = 0; i < 5; i++) {
+            particles.push(
+              new Particle(this.x, this.y, this.width, this.color)
+            );
+          }
+        }
       }
     }
 
@@ -152,8 +159,8 @@ let particles = [];
 class Particle {
   constructor(x, y, size, color) {
     this.size = size;
-    this.x = x + this.size * 0.8;
-    this.y = y + this.size * 0.2;
+    this.x = x + this.size * 0.5 + Math.random() * 50 - 25;
+    this.y = y + this.size * 0.3 + Math.random() * 50 - 25;
     this.radius = Math.random() * this.size * 0.1;
     this.maxRadius = Math.random() * 20 + 35;
     this.markedForDelete = false;
@@ -163,15 +170,22 @@ class Particle {
 
   update() {
     this.x += this.speedX;
-    this.radius += 0.4;
-    if (this.radius > this.maxRadius) this.markedForDelete = true;
+    this.radius += 0.3;
+    if (this.radius > this.maxRadius - 5) this.markedForDelete = true;
   }
 
   draw() {
+    // from visible to transparent
+    // trail in end gets bigger
+    // and as bigger radius - bigger transparency
+    ctx.save();
+    ctx.globalAlpha = 1 - this.radius / this.maxRadius;
+
     ctx.beginPath();
     ctx.fillStyle = this.color;
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     ctx.fill();
+    ctx.restore();
   }
 }
 
