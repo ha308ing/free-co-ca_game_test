@@ -14,6 +14,8 @@ window.addEventListener("load", () => {
       window.addEventListener("keydown", e => {
         if (this.#isKey(e.key) && !this.keys.includes(e.key)) {
           this.keys.push(e.key);
+        } else if (e.key === "Enter" && gameOver) {
+          gameRestart();
         }
       });
       window.addEventListener("keyup", e => {
@@ -40,7 +42,7 @@ window.addEventListener("load", () => {
       this.gameHeight = gameHeight;
       this.width = 200;
       this.height = 200;
-      this.x = 0;
+      this.x = 100;
       this.y = this.gameHeight - this.height;
       // documet.getElementById("playerImage")
       this.image = playerImage;
@@ -138,17 +140,13 @@ window.addEventListener("load", () => {
         this.width,
         this.height
       );
+    }
 
-      context.strokeStyle = "#fff";
-      context.beginPath();
-      context.arc(
-        this.x + this.width * 0.5,
-        this.y + this.height * 0.5,
-        this.width * 0.5,
-        0,
-        Math.PI * 2
-      );
-      context.stroke();
+    restart() {
+      this.x = 100;
+      this.y = this.gameHeight - this.height;
+      this.maxFrame = 8;
+      this.frameY = 0;
     }
   }
 
@@ -179,6 +177,10 @@ window.addEventListener("load", () => {
       if (this.x < 0 - this.width) {
         this.x = 0;
       }
+    }
+
+    restart() {
+      this.x = 0;
     }
   }
 
@@ -232,16 +234,6 @@ window.addEventListener("load", () => {
         this.width,
         this.height
       );
-      context.strokeStyle = "#fff";
-      context.beginPath();
-      context.arc(
-        this.x + this.width * 0.5,
-        this.y + this.height * 0.5,
-        this.width * 0.5,
-        0,
-        Math.PI * 2
-      );
-      context.stroke();
     }
   }
 
@@ -261,6 +253,7 @@ window.addEventListener("load", () => {
   }
 
   function displayStatusText(context) {
+    context.textAlign = "left";
     context.fillStyle = "#000";
     context.font = "40px Helvetica";
     context.fillText("Score: " + score, 20, 50);
@@ -271,10 +264,27 @@ window.addEventListener("load", () => {
     if (gameOver) {
       context.textAlign = "center";
       context.fillStyle = "#000";
-      context.fillText("Game over", canvas.width * 0.5, 200);
+      context.fillText(
+        "Game over (press Enter to restart)",
+        canvas.width * 0.5,
+        200
+      );
       context.fillStyle = "#fff";
-      context.fillText("Game over", canvas.width * 0.5 + 2, 200 + 2);
+      context.fillText(
+        "Game over (press Enter to restart)",
+        canvas.width * 0.5 + 2,
+        200 + 2
+      );
     }
+  }
+
+  function gameRestart() {
+    player.restart();
+    background.restart();
+    enemies = [];
+    score = 0;
+    gameOver = false;
+    animate(0);
   }
 
   const input = new InputHander();
