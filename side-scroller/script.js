@@ -6,6 +6,7 @@ window.addEventListener("load", () => {
   canvas.height = 720;
   let enemies = [];
   let score = 0;
+  let gameOver = false;
 
   class InputHander {
     constructor() {
@@ -55,7 +56,7 @@ window.addEventListener("load", () => {
       this.weight = 1;
     }
 
-    update(input, deltaTime) {
+    update(input, deltaTime, enemies) {
       // controls
       const keys = input.keys;
 
@@ -108,6 +109,16 @@ window.addEventListener("load", () => {
       } else {
         this.frameTimer += deltaTime;
       }
+
+      // collision detection
+      enemies.forEach(enemy => {
+        const dx = enemy.x + enemy.width * 0.5 - (this.x + this.width * 0.5);
+        const dy = enemy.y + enemy.width * 0.5 - (this.y + this.height * 0.5);
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < (enemy.width + this.width) / 2) {
+          gameOver = true;
+        }
+      });
     }
 
     onGround() {
@@ -127,6 +138,17 @@ window.addEventListener("load", () => {
         this.width,
         this.height
       );
+
+      context.strokeStyle = "#fff";
+      context.beginPath();
+      context.arc(
+        this.x + this.width * 0.5,
+        this.y + this.height * 0.5,
+        this.width * 0.5,
+        0,
+        Math.PI * 2
+      );
+      context.stroke();
     }
   }
 
@@ -210,6 +232,16 @@ window.addEventListener("load", () => {
         this.width,
         this.height
       );
+      context.strokeStyle = "#fff";
+      context.beginPath();
+      context.arc(
+        this.x + this.width * 0.5,
+        this.y + this.height * 0.5,
+        this.width * 0.5,
+        0,
+        Math.PI * 2
+      );
+      context.stroke();
     }
   }
 
@@ -235,6 +267,14 @@ window.addEventListener("load", () => {
     context.fillStyle = "#fff";
     context.font = "40px Helvetica";
     context.fillText("Score: " + score, 22, 52);
+
+    if (gameOver) {
+      context.textAlign = "center";
+      context.fillStyle = "#000";
+      context.fillText("Game over", canvas.width * 0.5, 200);
+      context.fillStyle = "#fff";
+      context.fillText("Game over", canvas.width * 0.5 + 2, 200 + 2);
+    }
   }
 
   const input = new InputHander();
@@ -255,9 +295,11 @@ window.addEventListener("load", () => {
     // background.update();
     handleEnemies(deltaTime);
     player.draw(ctx);
-    player.update(input, deltaTime);
+    player.update(input, deltaTime, enemies);
     displayStatusText(ctx);
-    requestAnimationFrame(animate);
+    if (!gameOver) {
+      requestAnimationFrame(animate);
+    }
   }
   animate(0);
 });
