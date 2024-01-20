@@ -145,17 +145,18 @@ window.addEventListener("load", () => {
 
       // collision detection
       enemies.forEach(enemy => {
-        const dx = enemy.x + enemy.width * 0.5 - (this.x + this.width * 0.5);
-        const dy = enemy.y + enemy.width * 0.5 - (this.y + this.height * 0.5);
+        // dx = enemy.collisionCirlce.center.x - this.collisionCircle.center.x
+        const dx =
+          enemy.x + (enemy.width * 0.5 - 20) - (this.x + this.width * 0.5);
+        // dy = enemy.collisionCirlce.center.y - this.collisionCircle.center.y
+        const dy =
+          enemy.y + enemy.height * 0.5 - (this.y + this.height * 0.5 + 20);
         const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < (enemy.width + this.width) / 2) {
+        // if distance < sum of radii
+        if (distance < enemy.width * 0.35 + this.width * 0.35) {
           gameOver = true;
         }
       });
-    }
-
-    onGround() {
-      return this.y >= this.gameHeight - this.height;
     }
 
     draw(context) {
@@ -171,6 +172,23 @@ window.addEventListener("load", () => {
         this.width,
         this.height
       );
+
+      // collision circle
+      // context.strokeStyle = "#fff";
+      // context.lineWidth = 5;
+      // context.beginPath();
+      // context.arc(
+      //   this.x + this.width * 0.5,
+      //   this.y + this.height * 0.5 + 20,
+      //   this.width * 0.35,
+      //   0,
+      //   Math.PI * 2
+      // );
+      // context.stroke();
+    }
+
+    onGround() {
+      return this.y >= this.gameHeight - this.height;
     }
 
     restart() {
@@ -190,7 +208,7 @@ window.addEventListener("load", () => {
       this.y = 0;
       this.width = 2400;
       this.height = 720;
-      this.speed = 10;
+      this.speed = 2;
     }
     draw(context) {
       context.drawImage(this.image, this.x, this.y, this.width, this.height);
@@ -265,6 +283,19 @@ window.addEventListener("load", () => {
         this.width,
         this.height
       );
+
+      // collision circle
+      // context.strokeStyle = "#fff";
+      // context.lineWidth = 5;
+      // context.beginPath();
+      // context.arc(
+      //   this.x + this.width * 0.5 - 20,
+      //   this.y + this.height * 0.5,
+      //   this.width * 0.35,
+      //   0,
+      //   Math.PI * 2
+      // );
+      // context.stroke();
     }
   }
 
@@ -353,7 +384,7 @@ window.addEventListener("load", () => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     background.draw(ctx);
-    // background.update();
+    background.update();
     handleEnemies(deltaTime);
     player.draw(ctx);
     player.update(input, deltaTime, enemies);
