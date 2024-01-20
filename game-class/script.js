@@ -13,7 +13,7 @@ window.addEventListener("load", function () {
       this.height = height;
 
       // enemy appear interval (ms)
-      this.enemyInterval = 1000;
+      this.enemyInterval = 100;
 
       // time since enemy appeared
       this.enemyTimer = 0;
@@ -48,7 +48,9 @@ window.addEventListener("load", function () {
     }
 
     #addNewEnemy() {
+      // structure {y: Worm}
       this.enemies.push(new Worm(this));
+      this.enemies.sort((a, b) => a.y - b.y);
     }
   }
 
