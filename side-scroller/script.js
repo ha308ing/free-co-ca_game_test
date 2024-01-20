@@ -5,6 +5,7 @@ window.addEventListener("load", () => {
   canvas.width = 800;
   canvas.height = 720;
   let enemies = [];
+  let score = 0;
 
   class InputHander {
     constructor() {
@@ -182,6 +183,7 @@ window.addEventListener("load", () => {
       this.x -= this.speed;
       if (this.x < -this.width) {
         this.markedForDelete = true;
+        score++;
       }
 
       if (this.frameTimer > this.frameInterval) {
@@ -226,7 +228,14 @@ window.addEventListener("load", () => {
     enemies = enemies.filter(enemy => !enemy.markedForDelete);
   }
 
-  function displayStatusText() {}
+  function displayStatusText(context) {
+    context.fillStyle = "#000";
+    context.font = "40px Helvetica";
+    context.fillText("Score: " + score, 20, 50);
+    context.fillStyle = "#fff";
+    context.font = "40px Helvetica";
+    context.fillText("Score: " + score, 22, 52);
+  }
 
   const input = new InputHander();
   const player = new Player(canvas.width, canvas.height);
@@ -247,6 +256,7 @@ window.addEventListener("load", () => {
     handleEnemies(deltaTime);
     player.draw(ctx);
     player.update(input, deltaTime);
+    displayStatusText(ctx);
     requestAnimationFrame(animate);
   }
   animate(0);
