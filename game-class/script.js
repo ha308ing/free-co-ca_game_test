@@ -18,7 +18,7 @@ window.addEventListener("load", function () {
       // time since enemy appeared
       this.enemyTimer = 0;
 
-      this.enemyTypes = ["worm", "ghost"];
+      this.enemyTypes = ["worm", "ghost", "spider"];
     }
 
     update(deltaTime) {
@@ -53,6 +53,7 @@ window.addEventListener("load", function () {
       // structure {y: Worm}
       const enemyType =
         this.enemyTypes[Math.floor(Math.random() * this.enemyTypes.length)];
+      console.log(enemyType);
       let enemy;
       switch (enemyType) {
         case "worm":
@@ -61,7 +62,11 @@ window.addEventListener("load", function () {
         case "ghost":
           enemy = new Ghost(this);
           break;
+        case "spider":
+          enemy = new Spider(this);
+          break;
       }
+      if (enemyType == "spider") console.log(enemy);
       this.enemies.push(enemy);
       // this.enemies.sort((a, b) => a.y - b.y);
     }
@@ -84,10 +89,10 @@ window.addEventListener("load", function () {
       }
     }
 
-    draw(ctx = this.game.ctx) {
+    draw(ctx) {
       ctx.drawImage(
         this.image,
-        this.frame * this.spriteWidth,
+        this.spriteWidth,
         0,
         this.spriteWidth,
         this.spriteHeight,
@@ -114,7 +119,6 @@ window.addEventListener("load", function () {
       this.width = this.spriteWidth * this.sizeModifier;
       this.height = this.spriteHeight * this.sizeModifier;
       this.numberOfSprites = 6;
-      this.frame = 0;
       this.speedX = Math.random() * 0.1 + 0.1;
       // worms are on the ground
       this.y = this.game.height - this.height;
@@ -131,7 +135,6 @@ window.addEventListener("load", function () {
       this.width = this.spriteWidth * this.sizeModifier;
       this.height = this.spriteHeight * this.sizeModifier;
       this.numberOfSprites = 6;
-      this.frame = 0;
       this.speedX = Math.random() * 0.2 + 0.1;
       // ghosts are on the top 60%
       this.y = 0.6 * Math.random() * this.game.height;
@@ -145,11 +148,48 @@ window.addEventListener("load", function () {
       this.angle += 0.04;
     }
 
-    draw(ctx = this.game.ctx) {
+    draw(ctx) {
       ctx.save();
       ctx.globalAlpha = 0.5;
-      super.draw();
+      super.draw(ctx);
       ctx.restore();
+    }
+  }
+
+  class Spider extends Enemy {
+    constructor(game) {
+      super(game);
+      this.image = spider;
+      this.spriteWidth = 310;
+      this.spriteHeight = 175;
+      this.sizeModifier = 0.5;
+      this.width = this.spriteWidth * this.sizeModifier;
+      this.height = this.spriteHeight * this.sizeModifier;
+      this.numberOfSprites = 6;
+      this.x = Math.random() * (this.game.width - this.width);
+      this.y = 0 - this.height;
+      this.speedY = Math.random() * 0.1 + 0.1;
+      this.speedX = 0;
+      this.amplitude =
+        this.game.height * 0.5 + Math.random() * this.game.height * 0.5;
+    }
+
+    update(deltaTime) {
+      super.update(deltaTime);
+      if (
+        this.y > this.amplitude - this.height ||
+        (this.speedY < 0 && this.y < 0)
+      )
+        this.speedY *= -1;
+      this.y += this.speedY * deltaTime;
+    }
+
+    draw(ctx) {
+      ctx.beginPath();
+      ctx.moveTo(this.x + this.width * 0.5, 0);
+      ctx.lineTo(this.x + this.width * 0.5, this.y + 10);
+      ctx.stroke();
+      super.draw(ctx);
     }
   }
 
