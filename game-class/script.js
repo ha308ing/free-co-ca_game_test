@@ -13,10 +13,12 @@ window.addEventListener("load", function () {
       this.height = height;
 
       // enemy appear interval (ms)
-      this.enemyInterval = 100;
+      this.enemyInterval = 500;
 
       // time since enemy appeared
       this.enemyTimer = 0;
+
+      this.enemyTypes = ["worm", "ghost"];
     }
 
     update(deltaTime) {
@@ -40,7 +42,7 @@ window.addEventListener("load", function () {
     }
 
     draw() {
-      this.enemies.forEach(e => e.draw());
+      this.enemies.forEach(e => e.draw(this.ctx));
     }
 
     clear() {
@@ -49,8 +51,19 @@ window.addEventListener("load", function () {
 
     #addNewEnemy() {
       // structure {y: Worm}
-      this.enemies.push(new Worm(this));
-      this.enemies.sort((a, b) => a.y - b.y);
+      const enemyType =
+        this.enemyTypes[Math.floor(Math.random() * this.enemyTypes.length)];
+      let enemy;
+      switch (enemyType) {
+        case "worm":
+          enemy = new Worm(this);
+          break;
+        case "ghost":
+          enemy = new Ghost(this);
+          break;
+      }
+      this.enemies.push(enemy);
+      // this.enemies.sort((a, b) => a.y - b.y);
     }
   }
 
@@ -71,8 +84,8 @@ window.addEventListener("load", function () {
       }
     }
 
-    draw() {
-      this.game.ctx.drawImage(
+    draw(ctx = this.game.ctx) {
+      ctx.drawImage(
         this.image,
         this.frame * this.spriteWidth,
         0,
@@ -103,6 +116,40 @@ window.addEventListener("load", function () {
       this.numberOfSprites = 6;
       this.frame = 0;
       this.speedX = Math.random() * 0.1 + 0.1;
+      // worms are on the ground
+      this.y = this.game.height - this.height;
+    }
+  }
+
+  class Ghost extends Enemy {
+    constructor(game) {
+      super(game);
+      this.image = ghost;
+      this.spriteWidth = 261;
+      this.spriteHeight = 209;
+      this.sizeModifier = 0.5;
+      this.width = this.spriteWidth * this.sizeModifier;
+      this.height = this.spriteHeight * this.sizeModifier;
+      this.numberOfSprites = 6;
+      this.frame = 0;
+      this.speedX = Math.random() * 0.2 + 0.1;
+      // ghosts are on the top 60%
+      this.y = 0.6 * Math.random() * this.game.height;
+      this.angle = 0;
+      this.curve = Math.random() * 3;
+    }
+
+    update(deltaTime) {
+      super.update(deltaTime);
+      this.y += Math.sin(this.angle) * this.curve;
+      this.angle += 0.04;
+    }
+
+    draw(ctx = this.game.ctx) {
+      ctx.save();
+      ctx.globalAlpha = 0.5;
+      super.draw();
+      ctx.restore();
     }
   }
 
