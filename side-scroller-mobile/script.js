@@ -11,6 +11,8 @@ window.addEventListener("load", () => {
   class InputHander {
     constructor() {
       this.keys = [];
+      this.touchY = "";
+      this.touchTreshold = 30;
       window.addEventListener("keydown", e => {
         if (this.#isKey(e.key) && !this.keys.includes(e.key)) {
           this.keys.push(e.key);
@@ -22,6 +24,31 @@ window.addEventListener("load", () => {
         if (this.#isKey(e.key)) {
           this.keys.splice(this.keys.indexOf(e.key), 1);
         }
+      });
+
+      window.addEventListener("touchstart", e => {
+        this.touchY = e.targetTouches[0].pageY;
+      });
+
+      window.addEventListener("touchmove", e => {
+        const swipteDistance = e.targetTouches[0].pageY - this.touchY;
+        if (
+          swipteDistance < -this.touchTreshold &&
+          !this.keys.includes("swipe up")
+        ) {
+          this.keys.push("swipe up");
+        } else if (
+          swipteDistance > this.touchTreshold &&
+          !this.keys.includes("swipe down")
+        ) {
+          this.keys.push("swipe down");
+          if (gameOver) gameRestart();
+        }
+      });
+
+      window.addEventListener("touchend", e => {
+        this.keys.splice(this.keys.indexOf("swipe up", 1));
+        this.keys.splice(this.keys.indexOf("swipe down", 1));
       });
     }
 
@@ -66,7 +93,10 @@ window.addEventListener("load", () => {
         this.speedX = 5;
       } else if (keys.includes("ArrowLeft")) {
         this.speedX = -5;
-      } else if (keys.includes("ArrowUp") && this.onGround()) {
+      } else if (
+        (keys.includes("ArrowUp") || keys.includes("swipe up")) &&
+        this.onGround()
+      ) {
         this.speedY -= 30;
       } else {
         this.speedX = 0;
@@ -264,17 +294,25 @@ window.addEventListener("load", () => {
     if (gameOver) {
       context.textAlign = "center";
       context.fillStyle = "#000";
+      context.fillText("Game over", canvas.width * 0.5, 200);
+      context.save();
+      context.font = "30px Helvetica";
       context.fillText(
-        "Game over (press Enter to restart)",
+        "press Enter or swipe down to restart",
         canvas.width * 0.5,
-        200
+        250
       );
+      context.restore();
       context.fillStyle = "#fff";
+      context.fillText("Game over", canvas.width * 0.5 + 2, 200 + 2);
+      context.save();
+      context.font = "30px Helvetica";
       context.fillText(
-        "Game over (press Enter to restart)",
+        "press Enter or swipe down to restart",
         canvas.width * 0.5 + 2,
-        200 + 2
+        250 + 2
       );
+      context.restore();
     }
   }
 
