@@ -36,7 +36,7 @@ window.addEventListener("load", function () {
         // so enemyInterval would be reached on the same time
         this.enemyTimer += deltaTime;
       }
-      this.enemies.forEach(e => e.update());
+      this.enemies.forEach(e => e.update(deltaTime));
     }
 
     draw() {
@@ -48,7 +48,7 @@ window.addEventListener("load", function () {
     }
 
     #addNewEnemy() {
-      this.enemies.push(new Enemy(this));
+      this.enemies.push(new Worm(this));
     }
   }
 
@@ -62,16 +62,45 @@ window.addEventListener("load", function () {
       this.markedForDelete = false;
     }
 
-    update() {
-      this.x--;
+    update(deltaTime) {
+      this.x -= this.speedX * deltaTime;
       if (this.x < 0 - this.width) {
         this.markedForDelete = true;
       }
     }
 
     draw() {
-      this.game.ctx.fillStyle = "black";
-      this.game.ctx.fillRect(this.x, this.y, this.width, this.height);
+      this.game.ctx.drawImage(
+        this.image,
+        this.frame * this.spriteWidth,
+        0,
+        this.spriteWidth,
+        this.spriteHeight,
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+    }
+  }
+
+  class Worm extends Enemy {
+    constructor(game) {
+      super(game);
+      // html elements with id
+      // are global variables
+      // div#myId => myId
+      // this.image = new Image();
+      // this.image.src = "./enemy_worm.png";
+      this.image = worm;
+      this.spriteWidth = 229;
+      this.spriteHeight = 171;
+      this.sizeModifier = 0.5;
+      this.width = this.spriteWidth * this.sizeModifier;
+      this.height = this.spriteHeight * this.sizeModifier;
+      this.numberOfSprites = 6;
+      this.frame = 0;
+      this.speedX = Math.random() * 0.1 + 0.1;
     }
   }
 
