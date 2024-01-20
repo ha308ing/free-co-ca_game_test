@@ -13,7 +13,7 @@ window.addEventListener("load", function () {
       this.height = height;
 
       // enemy appear interval (ms)
-      this.enemyInterval = 500;
+      this.enemyInterval = 1000;
 
       // time since enemy appeared
       this.enemyTimer = 0;
@@ -66,8 +66,8 @@ window.addEventListener("load", function () {
           enemy = new Spider(this);
           break;
       }
-      if (enemyType == "spider") console.log(enemy);
       this.enemies.push(enemy);
+      console.log(this.enemies);
       // this.enemies.sort((a, b) => a.y - b.y);
     }
   }
@@ -75,11 +75,12 @@ window.addEventListener("load", function () {
   class Enemy {
     constructor(game) {
       this.game = game;
-      this.x = this.game.width;
-      this.y = Math.random() * this.game.height;
-      this.width = 100;
-      this.height = 100;
       this.markedForDelete = false;
+      this.frameX = 0;
+      this.maxFrame = 5;
+      this.frameInterval = 5;
+      this.frameTimer = 0;
+      this.x = this.game.width;
     }
 
     update(deltaTime) {
@@ -87,12 +88,25 @@ window.addEventListener("load", function () {
       if (this.x < 0 - this.width) {
         this.markedForDelete = true;
       }
+      if (this.y < 0 - this.height * 2) {
+        this.markedForDelete = true;
+      }
+      if (this.frameTimer > this.frameInterval) {
+        if (this.frameX < this.maxFrame) {
+          this.frameX++;
+        } else {
+          this.frameX = 0;
+        }
+        this.frameTimer = 0;
+      } else {
+        this.frameTimer += deltaTime;
+      }
     }
 
     draw(ctx) {
       ctx.drawImage(
         this.image,
-        this.spriteWidth,
+        this.frameX * this.spriteWidth,
         0,
         this.spriteWidth,
         this.spriteHeight,
@@ -118,7 +132,6 @@ window.addEventListener("load", function () {
       this.sizeModifier = 0.5;
       this.width = this.spriteWidth * this.sizeModifier;
       this.height = this.spriteHeight * this.sizeModifier;
-      this.numberOfSprites = 6;
       this.speedX = Math.random() * 0.1 + 0.1;
       // worms are on the ground
       this.y = this.game.height - this.height;
@@ -134,7 +147,6 @@ window.addEventListener("load", function () {
       this.sizeModifier = 0.5;
       this.width = this.spriteWidth * this.sizeModifier;
       this.height = this.spriteHeight * this.sizeModifier;
-      this.numberOfSprites = 6;
       this.speedX = Math.random() * 0.2 + 0.1;
       // ghosts are on the top 60%
       this.y = 0.6 * Math.random() * this.game.height;
@@ -165,7 +177,6 @@ window.addEventListener("load", function () {
       this.sizeModifier = 0.5;
       this.width = this.spriteWidth * this.sizeModifier;
       this.height = this.spriteHeight * this.sizeModifier;
-      this.numberOfSprites = 6;
       this.x = Math.random() * (this.game.width - this.width);
       this.y = 0 - this.height;
       this.speedY = Math.random() * 0.1 + 0.1;
@@ -176,11 +187,7 @@ window.addEventListener("load", function () {
 
     update(deltaTime) {
       super.update(deltaTime);
-      if (
-        this.y > this.amplitude - this.height ||
-        (this.speedY < 0 && this.y < 0)
-      )
-        this.speedY *= -1;
+      if (this.y > this.amplitude - this.height) this.speedY *= -1;
       this.y += this.speedY * deltaTime;
     }
 
