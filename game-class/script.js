@@ -1,5 +1,4 @@
 window.addEventListener("load", function () {
-  console.log("hi");
   /** @type {HTMLCanvasElement} */
   const canvas = document.getElementById("canvas1");
   canvas.width = 500;
@@ -12,10 +11,31 @@ window.addEventListener("load", function () {
       this.ctx = ctx;
       this.width = width;
       this.height = height;
-      this.#addNewEnemy();
+
+      // enemy appear interval (ms)
+      this.enemyInterval = 1000;
+
+      // time since enemy appeared
+      this.enemyTimer = 0;
     }
 
-    update() {
+    update(deltaTime) {
+      // update less frequently for optimization
+      this.enemies = this.enemies.filter(enemy => !enemy.markedForDelete);
+
+      // if (this.enemyTimer % this.enemyInterval === 0) this.#addNewEnemy();
+      if (this.enemyTimer > this.enemyInterval) {
+        this.#addNewEnemy();
+        this.enemyTimer = 0;
+      } else {
+        // increase frame time not number of frames
+        // to support different refresh rate and power
+        // else enemyTimer will reach enemyInterval sooner on fast computer
+        // on fast computer deltaTime is low -> adds smaller deltaTime
+        // on slow -> adds larger deltaTime
+        // so enemyInterval would be reached on the same time
+        this.enemyTimer += deltaTime;
+      }
       this.enemies.forEach(e => e.update());
     }
 
@@ -39,10 +59,14 @@ window.addEventListener("load", function () {
       this.y = Math.random() * this.game.height;
       this.width = 100;
       this.height = 100;
+      this.markedForDelete = false;
     }
 
     update() {
       this.x--;
+      if (this.x < 0 - this.width) {
+        this.markedForDelete = true;
+      }
     }
 
     draw() {
@@ -59,7 +83,7 @@ window.addEventListener("load", function () {
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
 
-    game.update();
+    game.update(deltaTime);
     game.draw();
 
     requestAnimationFrame(animate);
