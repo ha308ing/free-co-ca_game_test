@@ -21,6 +21,7 @@ export class Sitting extends State {
     this.player.frameY = 5;
     this.player.frameLimit = 4;
     this.player.frameX = 0;
+    this.player.game.speed = this.player.game.speedMax * 0;
   }
 
   handleInput(input) {
@@ -40,6 +41,7 @@ export class Running extends State {
     this.player.frameY = 3;
     this.player.frameLimit = 8;
     this.player.frameX = 0;
+    this.player.game.speed = this.player.game.speedMax * 1;
   }
 
   handleInput(input) {
@@ -59,6 +61,7 @@ export class Jumping extends State {
     this.player.frameY = 1;
     this.player.frameLimit = 6;
     this.player.frameX = 0;
+    this.player.game.speed = this.player.game.speedMax * 1;
   }
 
   handleInput(input) {
@@ -78,6 +81,7 @@ export class Falling extends State {
     this.player.frameY = 2;
     this.player.frameLimit = 6;
     this.player.frameX = 0;
+    this.player.game.speed = this.player.game.speedMax * 1;
   }
 
   handleInput(input) {
