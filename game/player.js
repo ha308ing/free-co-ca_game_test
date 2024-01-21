@@ -1,4 +1,4 @@
-import { Sitting, Running } from "./playerStates.js";
+import { Sitting, Running, Jumping, Falling } from "./playerStates.js";
 
 export class Player {
   constructor(game) {
@@ -14,7 +14,12 @@ export class Player {
     this.speedY = 0;
     this.weight = 1;
     this.maxSpeed = 10;
-    this.states = [new Sitting(this), new Running(this)];
+    this.states = [
+      new Sitting(this),
+      new Running(this),
+      new Jumping(this),
+      new Falling(this),
+    ];
     this.currentState = this.states[0];
     this.currentState.enter();
   }
@@ -33,7 +38,6 @@ export class Player {
     if (this.x < leftBoundary) this.x = leftBoundary;
 
     // vertical movement
-    if (input.includes("ArrowUp") && this.onGround()) this.speedY -= 10;
     this.y += this.speedY;
     if (!this.onGround()) {
       this.speedY += this.weight;
