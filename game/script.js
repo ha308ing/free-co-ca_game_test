@@ -26,11 +26,12 @@ window.addEventListener("load", () => {
       this.ui = new UI(this);
       this.speed = 0;
       this.speedMax = 3;
-      this.debug = true;
+      this.debug = false;
       this.score = 0;
       this.fontColor = "black";
       this.player.currentState = this.player.states[0];
       this.player.currentState.enter();
+      this.particlesLimit = 50;
     }
 
     update(deltaTime) {
@@ -54,6 +55,11 @@ window.addEventListener("load", () => {
         particle.update(deltaTime);
         if (particle.markedToDelete) this.particles.splice(i, 1);
       });
+
+      if (this.particles.length > this.particlesLimit) {
+        // or unshift where pushing in playerState
+        this.particles = this.particles.slice(-this.particlesLimit);
+      }
     }
 
     draw(context) {
