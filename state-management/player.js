@@ -7,6 +7,8 @@ import {
   RunningRight,
   JumpingLeft,
   JumpingRight,
+  FallingLeft,
+  FallingRight,
 } from "./state.js";
 
 export class Player {
@@ -22,6 +24,8 @@ export class Player {
       new RunningRight(this),
       new JumpingLeft(this),
       new JumpingRight(this),
+      new FallingLeft(this),
+      new FallingRight(this),
     ];
     this.currentState = this.states[1];
     this.image = document.getElementById("dogImage");
@@ -67,7 +71,6 @@ export class Player {
 
     // vertical movement
     this.y += this.speedY;
-    console.log(this.speedY);
 
     if (!this.onGround()) {
       // when on air add weight
