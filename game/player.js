@@ -7,7 +7,7 @@ export class Player {
     this.height = 91.3;
     this.image = document.getElementById("player");
     this.x = 100;
-    this.y = this.game.height - this.height;
+    this.y = this.game.height - this.height - this.game.groundMargin;
     this.fps = 20;
     this.frameInterval = 1000 / this.fps;
     this.frameTimer = 0;
@@ -63,7 +63,7 @@ export class Player {
   }
 
   onGround() {
-    return this.y >= this.game.height - this.height;
+    return this.y >= this.game.height - this.height - this.game.groundMargin;
   }
 
   draw(context) {
