@@ -3,6 +3,8 @@ import {
   StandingRight,
   SittingLeft,
   SittingRight,
+  RunningLeft,
+  RunningRight,
 } from "./state.js";
 
 export class Player {
@@ -14,6 +16,8 @@ export class Player {
       new StandingRight(this),
       new SittingLeft(this),
       new SittingRight(this),
+      new RunningLeft(this),
+      new RunningRight(this),
     ];
     this.currentState = this.states[1];
     this.image = document.getElementById("dogImage");
@@ -23,6 +27,10 @@ export class Player {
     this.y = this.gameHeight - this.height;
     this.frameX = 0;
     this.frameY = 0;
+    this.frameMax = 6;
+    this.speedX = 0;
+    this.speed = 0;
+    this.maxSpeed = 10;
     this.fps = 20;
     this.frameInterval = 1000 / this.fps;
     this.frameTimer = 0;
