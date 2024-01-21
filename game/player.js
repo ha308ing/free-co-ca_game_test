@@ -9,6 +9,8 @@ export class Player {
     this.frameX = 0;
     this.frameY = 0;
     this.speed = 0;
+    this.speedY = 0;
+    this.weight = 1;
     this.maxSpeed = 10;
   }
 
@@ -23,6 +25,19 @@ export class Player {
     const leftBoundary = 0;
     if (this.x > rightBoundary) this.x = rightBoundary;
     if (this.x < leftBoundary) this.x = leftBoundary;
+
+    // vertical movement
+    if (input.includes("ArrowUp") && this.onGround()) this.speedY -= 10;
+    this.y += this.speedY;
+    if (!this.onGround()) {
+      this.speedY += this.weight;
+    } else {
+      this.speedY = 0;
+    }
+  }
+
+  onGround() {
+    return this.y >= this.game.height - this.height;
   }
 
   draw(context) {
