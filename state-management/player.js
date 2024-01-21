@@ -44,6 +44,13 @@ export class Player {
 
   update(input, deltaTime) {
     this.currentState.handleInput(input);
+
+    // horizontal movement
+    this.x += this.speed;
+    if (this.x >= this.gameWidth - this.width)
+      this.x = this.gameWidth - this.width;
+    if (this.x <= 0) this.x = 0;
+
     // sprite animation
     if (this.frameTimer < this.frameInterval) {
       this.frameTimer += deltaTime;
