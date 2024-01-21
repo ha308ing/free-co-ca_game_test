@@ -27,6 +27,7 @@ export class StandingLeft extends State {
   }
 
   enter() {
+    this.player.frameX = 0;
     this.player.speed = 0;
     this.player.frameY = 1;
     this.player.frameMax = 6;
@@ -54,6 +55,7 @@ export class StandingRight extends State {
   }
 
   enter() {
+    this.player.frameX = 0;
     this.player.speed = 0;
     this.player.frameY = 0;
     this.player.frameMax = 6;
@@ -81,6 +83,7 @@ export class SittingLeft extends State {
   }
 
   enter() {
+    this.player.frameX = 0;
     this.player.frameY = 9;
     this.player.speed = 0;
     this.player.frameMax = 4;
@@ -105,6 +108,7 @@ export class SittingRight extends State {
   }
 
   enter() {
+    this.player.frameX = 0;
     this.player.frameY = 8;
     this.player.speed = 0;
     this.player.frameMax = 4;
@@ -129,6 +133,7 @@ export class RunningLeft extends State {
   }
 
   enter() {
+    this.player.frameX = 0;
     this.player.frameY = 7;
     this.player.speed = -this.player.maxSpeed;
     this.player.frameMax = 8;
@@ -153,6 +158,7 @@ export class RunningRight extends State {
   }
 
   enter() {
+    this.player.frameX = 0;
     this.player.frameY = 6;
     this.player.speed = this.player.maxSpeed;
     this.player.frameMax = 8;
@@ -178,6 +184,7 @@ export class JumpingLeft extends State {
 
   enter() {
     this.player.frameY = 3;
+    this.player.frameX = 0;
     this.player.frameMax = 6;
     if (this.player.onGround()) this.player.speedY -= 20;
     this.player.speed = -this.player.maxSpeed * 0.5;
@@ -203,6 +210,7 @@ export class JumpingRight extends State {
 
   enter() {
     this.player.frameY = 2;
+    this.player.frameX = 0;
     this.player.frameMax = 6;
     if (this.player.onGround()) this.player.speedY -= 20;
     this.player.speed = this.player.maxSpeed * 0.5;
@@ -228,6 +236,7 @@ export class FallingLeft extends State {
 
   enter() {
     this.player.frameY = 5;
+    this.player.frameX = 0;
     this.player.frameMax = 6;
   }
 
@@ -249,6 +258,7 @@ export class FallingRight extends State {
 
   enter() {
     this.player.frameY = 4;
+    this.player.frameX = 0;
     this.player.frameMax = 6;
   }
 
