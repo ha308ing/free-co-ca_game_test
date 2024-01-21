@@ -8,6 +8,10 @@ export class Player {
     this.image = document.getElementById("player");
     this.x = 100;
     this.y = this.game.height - this.height;
+    this.fps = 20;
+    this.frameInterval = 1000 / this.fps;
+    this.frameTimer = 0;
+    this.frameLimit = 6;
     this.frameX = 0;
     this.frameY = 0;
     this.speed = 0;
@@ -24,7 +28,7 @@ export class Player {
     this.currentState.enter();
   }
 
-  update(input) {
+  update(input, deltaTime) {
     this.currentState.handleInput(input);
     // horizontal movement
     this.x += this.speed;
@@ -43,6 +47,18 @@ export class Player {
       this.speedY += this.weight;
     } else {
       this.speedY = 0;
+    }
+
+    // sprite animation
+    if (this.frameTimer < this.frameInterval) {
+      this.frameTimer += deltaTime;
+    } else {
+      this.frameTimer = 0;
+      if (this.frameX < this.frameLimit) {
+        this.frameX++;
+      } else {
+        this.frameX = 0;
+      }
     }
   }
 
