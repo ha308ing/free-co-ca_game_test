@@ -23,6 +23,9 @@ export class Player {
     this.y = this.gameHeight - this.height;
     this.frameX = 0;
     this.frameY = 0;
+    this.fps = 20;
+    this.frameInterval = 1000 / this.fps;
+    this.frameTimer = 0;
   }
 
   draw(context) {
@@ -39,8 +42,19 @@ export class Player {
     );
   }
 
-  update(input) {
+  update(input, deltaTime) {
     this.currentState.handleInput(input);
+    // sprite animation
+    if (this.frameTimer < this.frameInterval) {
+      this.frameTimer += deltaTime;
+    } else {
+      if (this.frameX < this.frameMax - 1) {
+        this.frameX++;
+      } else {
+        this.frameX = 0;
+      }
+      this.frameTimer = 0;
+    }
   }
 
   setState(state) {
