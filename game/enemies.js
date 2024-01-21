@@ -95,8 +95,29 @@ export class GroundEnemy extends Enemy {
 }
 
 export class ClimbingEnemy extends Enemy {
-  constructor() {
+  constructor(game) {
     super();
+    this.game = game;
     this.image = document.getElementById("enemy_spider");
+    this.width = 120;
+    this.height = 144;
+    this.x = this.game.width;
+    this.y = Math.random() * this.game.height * 0.5;
+    this.speedX = 0;
+    this.speedY = Math.random() > 0.5 ? 1 : -1;
+    this.frameLimit = 5;
+  }
+
+  update(deltaTime) {
+    super.update(deltaTime);
+    if (this.y > this.game.height - this.game.groundMargin - this.height)
+      this.speedY *= -1;
+  }
+  draw(context) {
+    super.draw(context);
+    context.beginPath();
+    context.moveTo(this.x + this.width * 0.5, 0);
+    context.lineTo(this.x + this.width * 0.5, this.y + this.height * 0.5);
+    context.stroke();
   }
 }
