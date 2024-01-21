@@ -5,6 +5,8 @@ export const state = {
   SITTING_RIGHT: 3,
   RUNNING_LEFT: 4,
   RUNNING_RIGHT: 5,
+  JUMPING_LEFT: 6,
+  JUMPING_RIGHT: 7,
 };
 
 class State {
@@ -36,6 +38,8 @@ export class StandingLeft extends State {
       this.player.setState(state.RUNNING_LEFT);
     } else if (input === "PRESS down") {
       this.player.setState(state.SITTING_LEFT);
+    } else if (input === "PRESS up") {
+      this.player.setState(state.JUMPING_LEFT);
     }
   }
 }
@@ -61,6 +65,8 @@ export class StandingRight extends State {
       this.player.setState(state.RUNNING_RIGHT);
     } else if (input === "PRESS down") {
       this.player.setState(state.SITTING_RIGHT);
+    } else if (input === "PRESS up") {
+      this.player.setState(state.JUMPING_RIGHT);
     }
   }
 }
@@ -157,6 +163,52 @@ export class RunningRight extends State {
       this.player.setState(state.STANDING_RIGHT);
     } else if (input === "PRESS down") {
       this.player.setState(state.SITTING_RIGHT);
+    }
+  }
+}
+
+export class JumpingLeft extends State {
+  constructor(player) {
+    super("JUMPING LEFT");
+
+    this.player = player;
+  }
+
+  enter() {
+    this.player.frameY = 3;
+    this.player.frameMax = 6;
+    if (this.player.onGround()) this.player.speedY -= 20;
+    this.player.speed = -this.player.maxSpeed * 0.5;
+  }
+
+  handleInput(input) {
+    if (input === "PRESS right") {
+      this.player.setState(state.JUMPING_RIGHT);
+    } else if (this.player.onGround()) {
+      this.player.setState(state.STANDING_LEFT);
+    }
+  }
+}
+
+export class JumpingRight extends State {
+  constructor(player) {
+    super("JUMPING RIGHT");
+
+    this.player = player;
+  }
+
+  enter() {
+    this.player.frameY = 2;
+    this.player.frameMax = 6;
+    if (this.player.onGround()) this.player.speedY -= 20;
+    this.player.speed = this.player.maxSpeed * 0.5;
+  }
+
+  handleInput(input) {
+    if (input === "PRESS left") {
+      this.player.setState(state.JUMPING_LEFT);
+    } else if (this.player.onGround()) {
+      this.player.setState(state.STANDING_RIGHT);
     }
   }
 }
