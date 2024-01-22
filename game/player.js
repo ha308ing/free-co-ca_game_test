@@ -37,6 +37,7 @@ export class Player {
       new Diving(this.game),
       new Hit(this.game),
     ];
+    this.currentState = null;
     // this.currentState = this.states[0];
     // this.currentState.enter();
   }
@@ -142,6 +143,7 @@ export class Player {
           );
         } else {
           this.game.lives--;
+          this.game.score -= 5;
           this.setState(6);
         }
       } else {

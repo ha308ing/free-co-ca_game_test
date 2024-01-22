@@ -8,7 +8,7 @@ window.addEventListener("load", () => {
   /** @type {HTMLCanvasElement} */
   const canvas = document.getElementById("canvas1");
   const ctx = canvas.getContext("2d");
-  canvas.width = 500;
+  canvas.width = 900;
   canvas.height = 500;
 
   class Game {
@@ -23,7 +23,7 @@ window.addEventListener("load", () => {
       this.collisions = [];
       this.floatingMessages = [];
       this.enemyTimer = 0;
-      this.enemyInterval = 1000;
+      this.enemyInterval = 500;
       this.input = new InputHandler(this);
       this.ui = new UI(this);
       this.speed = 0;
@@ -34,8 +34,9 @@ window.addEventListener("load", () => {
       this.player.currentState = this.player.states[0];
       this.player.currentState.enter();
       this.particlesLimit = 50;
+      this.winningScore = 40;
       this.time = 0;
-      this.timeLimit = 10000;
+      this.timeLimit = 30000;
       this.gameOver = false;
       this.lives = 10;
     }
