@@ -28,7 +28,36 @@ export class Dust extends Particle {
     context.fill();
   }
 }
-export class Splash extends Particle {}
+
+export class Splash extends Particle {
+  constructor(game, x, y) {
+    super(game);
+    this.size = Math.random() * 100 + 100;
+    this.x = x;
+    this.y = y;
+    this.speedX = Math.random() * 6 - 3;
+    this.speedY = Math.random() * 2 + 2;
+    this.weight = 0;
+    this.image = document.getElementById("fire");
+  }
+  update() {
+    super.update();
+    this.weight += 0.1;
+    this.y += this.weight;
+  }
+  draw(context) {
+    context.save();
+    context.translate(this.x, this.y);
+    context.drawImage(
+      this.image,
+      -this.size * 0.5,
+      -this.size * 0.5,
+      this.size,
+      this.size
+    );
+    context.restore();
+  }
+}
 
 export class Fire extends Particle {
   constructor(game, x, y) {
