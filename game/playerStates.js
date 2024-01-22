@@ -55,7 +55,8 @@ export class Running extends State {
 
   handleInput(input) {
     if (this.game.player.frameX % 6 === 0)
-      this.game.particles.push(
+      // add to head to optimize removing
+      this.game.particles.unshift(
         new Dust(
           this.game,
           this.game.player.x + this.game.player.width * 0.3,
@@ -132,7 +133,7 @@ export class Rolling extends State {
   }
 
   handleInput(input) {
-    this.game.particles.push(
+    this.game.particles.unshift(
       new Fire(
         this.game,
         this.game.player.x + this.game.player.width * 0.5,
@@ -150,7 +151,7 @@ export class Rolling extends State {
       this.game.player.onGround()
     ) {
       this.game.player.speedY -= 27;
-    } else if (input.includes("ArrowDown")) {
+    } else if (input.includes("ArrowDown") && !this.game.player.onGround()) {
       this.game.player.setState(states.DIVING);
     }
   }
@@ -170,7 +171,7 @@ export class Diving extends State {
   }
 
   handleInput(input) {
-    this.game.particles.push(
+    this.game.particles.unshift(
       new Fire(
         this.game,
         this.game.player.x + this.game.player.width * 0.5,
@@ -180,7 +181,7 @@ export class Diving extends State {
 
     if (this.game.player.onGround()) {
       for (let i = 0; i < 30; i++) {
-        this.game.particles.push(
+        this.game.particles.unshift(
           new Splash(
             this.game,
             this.game.player.x + this.game.player.width * 0.5,

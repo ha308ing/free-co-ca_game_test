@@ -67,7 +67,8 @@ window.addEventListener("load", () => {
 
       if (this.particles.length > this.particlesLimit) {
         // or unshift where pushing in playerState
-        this.particles = this.particles.slice(-this.particlesLimit);
+        // this.particles = this.particles.slice(-this.particlesLimit);
+        this.particles.length = this.particlesLimit;
       }
 
       // handle collision sprites
