@@ -20,6 +20,7 @@ window.addEventListener("load", () => {
       this.player = new Player(this);
       this.enemies = [];
       this.particles = [];
+      this.collisions = [];
       this.enemyTimer = 0;
       this.enemyInterval = 1000;
       this.input = new InputHandler(this);
@@ -51,6 +52,7 @@ window.addEventListener("load", () => {
         if (enemy.markedToDelete) this.enemies.splice(i, 1);
       });
 
+      // handle particles
       this.particles.forEach((particle, i) => {
         particle.update(deltaTime);
         if (particle.markedToDelete) this.particles.splice(i, 1);
@@ -60,6 +62,12 @@ window.addEventListener("load", () => {
         // or unshift where pushing in playerState
         this.particles = this.particles.slice(-this.particlesLimit);
       }
+
+      // handle collision sprites
+      this.collisions.forEach((collision, i) => {
+        collision.update(deltaTime);
+        if (collision.markedToDelete) this.collisions.splice(i, 1);
+      });
     }
 
     draw(context) {
@@ -67,6 +75,7 @@ window.addEventListener("load", () => {
       this.ui.draw(context);
       this.enemies.forEach(e => e.draw(context));
       this.particles.forEach(p => p.draw(context));
+      this.collisions.forEach(c => c.draw(context));
       this.player.draw(context);
     }
 
