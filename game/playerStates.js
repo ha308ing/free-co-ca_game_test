@@ -195,3 +195,30 @@ export class Diving extends State {
     }
   }
 }
+
+export class Hit extends State {
+  constructor(game) {
+    super("HIT", game);
+  }
+
+  enter() {
+    this.game.player.frameY = 4;
+    this.game.player.frameLimit = 10;
+    this.game.player.frameX = 0;
+    this.game.speed = this.game.speedMax * 0;
+  }
+
+  handleInput(input) {
+    if (
+      this.game.player.frameX > this.game.player.frameLimit - 1 &&
+      this.game.player.onGround()
+    ) {
+      this.game.player.setState(states.RUNNING);
+    } else if (
+      this.game.player.frameX > this.game.player.frameLimit - 1 &&
+      !this.game.player.onGround()
+    ) {
+      this.game.player.setState(states.FALLING);
+    }
+  }
+}
