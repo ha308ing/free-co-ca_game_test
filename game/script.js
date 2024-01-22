@@ -33,9 +33,16 @@ window.addEventListener("load", () => {
       this.player.currentState = this.player.states[0];
       this.player.currentState.enter();
       this.particlesLimit = 50;
+      this.time = 0;
+      this.timeLimit = 10000;
+      this.gameOver = false;
     }
 
     update(deltaTime) {
+      this.time += deltaTime;
+      if (this.time > this.timeLimit) {
+        this.gameOver = true;
+      }
       this.background.update();
       this.player.update(this.input.keys, deltaTime);
 
@@ -100,7 +107,7 @@ window.addEventListener("load", () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     game.update(deltaTime);
     game.draw(ctx);
-    requestAnimationFrame(animate);
+    if (!game.gameOver) requestAnimationFrame(animate);
   }
 
   animate(0);
