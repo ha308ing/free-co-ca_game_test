@@ -88,6 +88,8 @@ export class Jumping extends State {
       this.game.player.setState(states.FALLING);
     } else if (input.includes("Enter")) {
       this.game.player.setState(states.ROLLING);
+    } else if (input.includes("ArrowDown")) {
+      this.game.player.setState(states.DIVING);
     }
   }
 }
@@ -109,6 +111,8 @@ export class Falling extends State {
       this.game.player.setState(states.RUNNING);
     } else if (input.includes("Enter")) {
       this.game.player.setState(states.ROLLING);
+    } else if (input.includes("ArrowDown")) {
+      this.game.player.setState(states.DIVING);
     }
   }
 }
@@ -144,6 +148,38 @@ export class Rolling extends State {
       this.game.player.onGround()
     ) {
       this.game.player.speedY -= 27;
+    } else if (input.includes("ArrowDown")) {
+      this.game.player.setState(states.DIVING);
+    }
+  }
+}
+
+export class Diving extends State {
+  constructor(game) {
+    super("DIVING", game);
+  }
+
+  enter() {
+    this.game.player.frameY = 6;
+    this.game.player.frameLimit = 6;
+    this.game.player.speedY = 15;
+    this.game.player.frameX = 0;
+    this.game.speed = this.game.speedMax * 0;
+  }
+
+  handleInput(input) {
+    this.game.particles.push(
+      new Fire(
+        this.game,
+        this.game.player.x + this.game.player.width * 0.5,
+        this.game.player.y + this.game.player.height * 0.5
+      )
+    );
+
+    if (this.game.player.onGround()) {
+      this.game.player.setState(states.RUNNING);
+    } else if (input.includes("Enter") && this.game.player.onGround()) {
+      this.game.player.setState(states.ROLLING);
     }
   }
 }

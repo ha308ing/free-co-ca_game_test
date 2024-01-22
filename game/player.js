@@ -1,4 +1,11 @@
-import { Sitting, Running, Jumping, Falling, Rolling } from "./playerStates.js";
+import {
+  Sitting,
+  Running,
+  Jumping,
+  Falling,
+  Rolling,
+  Diving,
+} from "./playerStates.js";
 
 export class Player {
   constructor(game) {
@@ -24,6 +31,7 @@ export class Player {
       new Jumping(this.game),
       new Falling(this.game),
       new Rolling(this.game),
+      new Diving(this.game),
     ];
     // this.currentState = this.states[0];
     // this.currentState.enter();
@@ -50,6 +58,11 @@ export class Player {
     } else {
       this.speedY = 0;
     }
+
+    // vertical boundaries
+    const bottomBoundary =
+      this.game.height - this.game.groundMargin - this.height;
+    if (this.y > bottomBoundary) this.y = bottomBoundary;
 
     // sprite animation
     if (this.frameTimer < this.frameInterval) {
