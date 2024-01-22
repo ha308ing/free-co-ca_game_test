@@ -21,6 +21,7 @@ window.addEventListener("load", () => {
       this.enemies = [];
       this.particles = [];
       this.collisions = [];
+      this.floatingMessages = [];
       this.enemyTimer = 0;
       this.enemyInterval = 1000;
       this.input = new InputHandler(this);
@@ -55,16 +56,16 @@ window.addEventListener("load", () => {
         this.enemyTimer = 0;
       }
 
-      this.enemies.forEach((enemy, i) => {
+      this.enemies.forEach(enemy => {
         enemy.update(deltaTime);
-        if (enemy.markedToDelete) this.enemies.splice(i, 1);
       });
+      this.enemies = this.enemies.filter(e => !e.markedToDelete);
 
       // handle particles
-      this.particles.forEach((particle, i) => {
+      this.particles.forEach(particle => {
         particle.update(deltaTime);
-        if (particle.markedToDelete) this.particles.splice(i, 1);
       });
+      this.particles = this.particles.filter(p => !p.markedToDelete);
 
       if (this.particles.length > this.particlesLimit) {
         // or unshift where pushing in playerState
@@ -73,10 +74,18 @@ window.addEventListener("load", () => {
       }
 
       // handle collision sprites
-      this.collisions.forEach((collision, i) => {
+      this.collisions.forEach(collision => {
         collision.update(deltaTime);
-        if (collision.markedToDelete) this.collisions.splice(i, 1);
       });
+      this.collisions = this.collisions.filter(c => !c.markedToDelete);
+
+      // handle floating messages
+      this.floatingMessages.forEach(message => {
+        message.update();
+      });
+      this.floatingMessages = this.floatingMessages.filter(
+        m => !m.markedToDelete
+      );
     }
 
     draw(context) {
@@ -85,6 +94,7 @@ window.addEventListener("load", () => {
       this.enemies.forEach(e => e.draw(context));
       this.particles.forEach(p => p.draw(context));
       this.collisions.forEach(c => c.draw(context));
+      this.floatingMessages.forEach(m => m.draw(context));
       this.player.draw(context);
     }
 
