@@ -3,6 +3,9 @@ export class UI {
     this.game = game;
     this.fontSize = 30;
     this.fontFamily = "Creepster";
+    this.livesImage = document.getElementById("lives");
+    this.livesSize = 50;
+    this.livesSizeModifier = 0.7;
   }
 
   draw(context) {
@@ -22,6 +25,21 @@ export class UI {
     const time = (this.game.time * 0.001).toFixed(1);
     context.font = this.fontSize * 0.8 + "px " + this.fontFamily;
     context.fillText("Time: " + time, 20, 80);
+
+    // lives
+    for (let i = 0; i < this.game.lives; i++) {
+      context.drawImage(
+        this.livesImage,
+        0,
+        0,
+        this.livesSize,
+        this.livesSize,
+        20 + i * this.livesSize * this.livesSizeModifier,
+        90,
+        this.livesSize * this.livesSizeModifier,
+        this.livesSize * this.livesSizeModifier
+      );
+    }
 
     // game over message
     if (this.game.gameOver) {

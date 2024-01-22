@@ -131,6 +131,7 @@ export class Player {
         ) {
           this.game.score++;
         } else {
+          this.game.lives--;
           this.setState(6);
         }
       } else {

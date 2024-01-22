@@ -36,11 +36,12 @@ window.addEventListener("load", () => {
       this.time = 0;
       this.timeLimit = 10000;
       this.gameOver = false;
+      this.lives = 10;
     }
 
     update(deltaTime) {
       this.time += deltaTime;
-      if (this.time > this.timeLimit) {
+      if (this.time > this.timeLimit || this.lives === 0) {
         this.gameOver = true;
       }
       this.background.update();

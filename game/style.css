@@ -24,6 +24,7 @@
 #enemy_plant,
 #enemy_spider,
 #fire,
-#boom {
+#boom,
+#lives {
   display: none;
 }
